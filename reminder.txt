@@ -1,0 +1,8 @@
+docker compose up
+
+docker volume prune
+
+python -m venv venv 
+.\venv\Scripts\activate
+pip install django
+django-admin startproject diceandtiles .

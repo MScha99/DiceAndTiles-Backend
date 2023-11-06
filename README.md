@@ -1,2 +1,2 @@
 # DiceAndTiles-Backend
-django rest framework + postgresql + pgadmin4
+backend consisting of Django Rest Framework  with postgresql and pgadmin4
