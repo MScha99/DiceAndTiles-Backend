@@ -1,8 +1,32 @@
 docker compose up
+docker-compose up --build
 
 docker volume prune
 
 python -m venv venv 
 .\venv\Scripts\activate
 pip install django
+pip install -r requirements.txt
+
+
 django-admin startproject diceandtiles .
+
+
+2. git pull (pobiera całe repo na kompa)
+3. git checkout (zmienia na konkretny branch na którym chcemy pracować)
+opcjonalne: git branch dla weryfikacji
+4. pisanie kodu blablabla praca
+5. git add -A (dodaje wszystkie zmiany do commitu)
+6. git commit -m "Stworzono ekran mapy" (tworzy commit i dodaje do niego komentarz)
+7. git push (wysyła commit do githuba)
+8. na stronce w zakładce Pull requests zobaczyć czy nie będzie żadnych problemów ze zmergowaniem naszego brancha z main branchem i "merge pull requests"
+
+
+
+docker exec -it django_web /bin/bash
+python manage.py makemigrations
+python manage.py migrate
+
+maciej@root.com
+172.22.0.3
+maciej
