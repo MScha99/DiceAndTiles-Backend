@@ -16,14 +16,40 @@ class Category(models.Model):
      return self.name
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)    
-    brand = models.CharField(max_length=50, blank=True)
+    bggid = models.IntegerField(null=True, blank=True)
+    name = models.CharField(max_length=100)       
     description =models.TextField(blank=True)
     is_active = models.BooleanField(default=True) 
     category = models.ManyToManyField(Category, blank=True)
     slug = models.SlugField(max_length=100, blank=True)
-    image =models.ImageField(upload_to='images/', null=True, blank=True)
+    min_players=models.IntegerField(blank=True)
+    max_players=models.IntegerField(blank=True)
+    image_url=models.URLField(blank=True)
+    image1 =models.ImageField(upload_to='images/', null=True, blank=True)
+    image2 =models.ImageField(upload_to='images/', null=True, blank=True)
+    image3 =models.ImageField(upload_to='images/', null=True, blank=True)
+    image4 =models.ImageField(upload_to='images/', null=True, blank=True)
+    image5 =models.ImageField(upload_to='images/', null=True, blank=True)
+    thumbnail =models.ImageField(upload_to='images/', null=True, blank=True)
+    thumbnail_url=models.URLField(blank=True)
+    
 
+
+    def __str__(self):
+     return self.name
+    
+
+class Fetched_Product(models.Model):
+    bggid = models.IntegerField(null=True, blank=True)
+    name = models.CharField(max_length=100)       
+    description =models.TextField(blank=True)    
+    category = models.ManyToManyField(Category, blank=True)
+    slug = models.SlugField(max_length=100, null=True, blank=True)
+    min_players=models.IntegerField(null=True, blank=True)
+    max_players=models.IntegerField(null=True, blank=True)
+    image_url=models.URLField(blank=True)
+    thumbnail_url=models.URLField(blank=True)
+    
 
     def __str__(self):
      return self.name
