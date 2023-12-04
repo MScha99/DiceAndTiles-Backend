@@ -1,9 +1,13 @@
 from django.contrib import admin
-from .models import Product, Comment, Profile, Vote
+from .models import Product, Comment, Profile, Vote, Fetched_Product
 
 
 
 @admin.register(Product)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name','id','slug']
+
+@admin.register(Fetched_Product)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name','id','slug']
 
