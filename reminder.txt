@@ -30,3 +30,8 @@ python manage.py migrate
 maciej@root.com
 172.22.0.3
 maciej
+
+
+docker exec -i f0bb28d6fc2fa25bb96e945337ba78a7b383745507e308c47e54b2254ee7e840 /bin/bash -c "PGPASSWORD=maciej pg_dump --username maciej DiceAndTiles" > "E:\Studia\sem9\projekt zespołowy\DiceAndTiles-Backend\dump/dump.sql"
+
+docker exec -i postgresql_db /bin/bash -c "PGPASSWORD=maciej psql --username maciej DiceAndTiles" < "/path/on/your/machine/dump.sql"
