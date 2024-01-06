@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-4x()b#(!dm1&k*d##0$s12=!ejs^n1r10*e^x*%$%^ffprh&(l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['152.67.138.40','localhost','0.0.0.0', '127.0.0.1', 'diceandtiles.xyz', 'www.diceandtiles.xyz']
 
 
 # Application definition
@@ -92,10 +92,10 @@ DATABASES = {
         # 'NAME': os.environ.get('POSTGRES_NAME'),
         # 'USER': os.environ.get('POSTGRES_USER'),
         # 'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'NAME': 'DiceAndTiles',
+        'NAME': 'diceandtiles',
         'USER': 'maciej',
         'PASSWORD': 'maciej',
-        'HOST': 'database',
+        'HOST': 'localhost',
         'PORT': 5432,
     }
 }
@@ -141,3 +141,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
