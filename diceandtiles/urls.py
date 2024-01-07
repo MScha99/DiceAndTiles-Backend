@@ -29,8 +29,9 @@ router.register(
     r'fetchedproducts', views.Fetched_ProductViewSet, basename="fetched products")
 
 
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('register/', RegisterView.as_view(), name='register'),
-    path("", include(router.urls)),
+    path('api/admin/', admin.site.urls),
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path("api/", include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

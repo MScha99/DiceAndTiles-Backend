@@ -6,3 +6,4 @@ DiceAndTiles-Backend.code-workspace
 __pycache__
 db.sqlite3
 media
+images/

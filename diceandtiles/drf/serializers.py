@@ -14,12 +14,20 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ( 
             "id",
+            "bggid",
             "name",
             "slug",            
             "description",            
             "is_active",  
-            "category",          
-            "image_url",            
+            "category",
+            "min_players",        
+            "max_players",    
+            "image1",   
+            "image2",   
+            "image3",   
+            "image4",   
+            "image5",   
+            "thumbnail",            
         )
 
 
