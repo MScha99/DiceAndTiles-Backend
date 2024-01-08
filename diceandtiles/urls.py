@@ -17,8 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as views2
 from .drf import views
-from .drf.views import RegisterView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -27,11 +27,14 @@ router.register(
     r'products', views.ProductViewSet, basename="all products")
 router.register(
     r'fetchedproducts', views.Fetched_ProductViewSet, basename="fetched products")
+router.register(
+    r'register', views.RegisterViewSet, basename="register new user")
 
 
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
-    path('api/register/', RegisterView.as_view(), name='register'),
+    # path('api/register/', views.RegisterView, name='register'),
+    path('api/login/', views2.obtain_auth_token),
     path("api/", include(router.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

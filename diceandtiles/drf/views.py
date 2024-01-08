@@ -35,14 +35,8 @@ class Fetched_ProductViewSet(viewsets.ModelViewSet):
     http_method_names = ['head','get']
     lookup_field = "bggid"
 
-class RegisterView(generics.CreateAPIView):
+class RegisterViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        user = User.objects.get(username=request.data['username'])
-        token, created = Token.objects.get_or_create(user=user)
-        response.data['token'] = token.key
-        return response
+    http_method_names = ['post', 'head']
    
