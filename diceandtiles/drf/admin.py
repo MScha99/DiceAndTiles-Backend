@@ -10,6 +10,7 @@ from tempfile import NamedTemporaryFile
 @admin.register(Product)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name','id','slug']
+    ordering = ['id']
 
     actions = ['get_remote_image']
 
@@ -46,7 +47,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Fetched_Product)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name','id','slug']
-    
+    ordering = ['id']
     actions = ['custom_action']
 
     def custom_action(self, request, queryset):
