@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Product, Category, Comment, Vote, Profile, Fetched_Product
 from django.contrib.auth.models import User
+from rest_framework.authtoken.views import Token
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,17 +11,34 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=True)
+    upvotes = serializers.SerializerMethodField()
+    downvotes = serializers.SerializerMethodField()
     class Meta:
         model = Product
         fields = ( 
             "id",
+            "bggid",
             "name",
             "slug",            
             "description",            
             "is_active",  
-            "category",          
-            "image_url",            
+            "category",
+            "min_players",        
+            "max_players",    
+            "image1",   
+            "image2",   
+            "image3",   
+            "image4",   
+            "image5",   
+            "thumbnail",
+            "upvotes",
+            "downvotes",            
         )
+    def get_upvotes(self, obj):
+        return obj.vote_set.filter(value=2).count()
+
+    def get_downvotes(self, obj):
+        return obj.vote_set.filter(value=1).count()
 
 
 class Fetched_ProductSerializer(serializers.ModelSerializer):
@@ -53,11 +71,32 @@ class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
 
-
         fields = ["id","product","value","owner"]
+        extra_kwargs = {
+            'product':{'required':True},
+            'value':{'required':True}
+            }
+
+class OwnedProductSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    class Meta:
+        model = Vote
+
+        fields = ["id","product","owner"]
+        extra_kwargs = {
+            'product':{'required':True},
+            }
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['id', 'email', 'username','password']
+
+        extra_kwargs = {'password':{
+            'write_only':True,
+            'required':True
+        }}
+    def create(self, validated_data):
+        user=User.objects.create_user(**validated_data)
+        Token.objects.create(user=user)
+        return user

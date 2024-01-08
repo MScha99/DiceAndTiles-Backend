@@ -96,3 +96,7 @@ class Profile(models.Model):
 
     def __str__(self):
      return self.user.username
+    
+class OwnedProduct(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)    
+    owner = models.ForeignKey('auth.User', related_name='ownedproducts', on_delete=models.CASCADE)
