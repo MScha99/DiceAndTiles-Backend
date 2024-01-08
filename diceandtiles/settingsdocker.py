@@ -129,3 +129,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/api/'  # Set the desired endpoint for serving media files
+MEDIA_ROOT = BASE_DIR / 'media'  # Set the path to the directory where media files are stored

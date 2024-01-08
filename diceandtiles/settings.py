@@ -143,3 +143,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+MEDIA_URL = '/api/'  # Set the desired endpoint for serving media files
+MEDIA_ROOT = BASE_DIR / 'media'  # Set the path to the directory where media files are stored
