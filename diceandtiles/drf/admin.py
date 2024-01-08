@@ -1,18 +1,37 @@
 from django.contrib import admin
 from django.core.management import call_command
-from .models import Product, Comment, Profile, Vote, Fetched_Product
+from .models import Product, Comment, Profile, Vote, Fetched_Product, OwnedProduct
 from django.core.files import File
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
+from django.contrib.auth.models import User
+import random
 
 
 
 @admin.register(Product)
-class CategoryAdmin(admin.ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     list_display = ['name','id','slug']
     ordering = ['id']
 
-    actions = ['get_remote_image']
+    actions = ['get_remote_image','make_users_cast_vote']
+
+    def make_users_cast_vote(self, request, queryset):
+        # Get all registered users
+        all_users = User.objects.exclude(is_staff=True)
+
+        for product in queryset:
+            # Get users who haven't voted for the current product
+            users_without_vote = all_users.exclude(votes__product=product)
+
+            # Create a vote with a random value (1 or 2) for each user
+            for user in users_without_vote:
+                value = random.choice([1, 2])
+                Vote.objects.create(product=product, owner=user, value=value)
+
+
+              
+    make_users_cast_vote.short_description = "Make users cast votes for selected products"
 
     def get_remote_image(self, request, queryset):
         for product in queryset:
@@ -45,7 +64,7 @@ class CategoryAdmin(admin.ModelAdmin):
     get_remote_image.short_description = 'download image for product'
 
 @admin.register(Fetched_Product)
-class CategoryAdmin(admin.ModelAdmin):
+class Fetched_ProductAdmin(admin.ModelAdmin):
     list_display = ['name','id','slug']
     ordering = ['id']
     actions = ['custom_action']
@@ -57,13 +76,21 @@ class CategoryAdmin(admin.ModelAdmin):
     custom_action.short_description = 'Populate PRODUCTS table command'
 
 @admin.register(Comment)
-class CategoryAdmin(admin.ModelAdmin):
+class CommentAdmin(admin.ModelAdmin):
     list_display = ['product','body','created_on','owner']
 
 @admin.register(Profile)
-class CategoryAdmin(admin.ModelAdmin):
+class ProfileAdmin(admin.ModelAdmin):
     list_display = ['id','user']
     
 @admin.register(Vote)
-class CategoryAdmin(admin.ModelAdmin):
+class VoteAdmin(admin.ModelAdmin):
     list_display = ['product','value','owner']
+
+
+@admin.register(OwnedProduct)
+class OwnedProductAdmin(admin.ModelAdmin):
+    list_display = ['product','owner']
+
+
+

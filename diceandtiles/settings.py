@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     #internal apps
     'diceandtiles.drf',
+    'drf_yasg',
 ]   
 
 REST_FRAMEWORK = {

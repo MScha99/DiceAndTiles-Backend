@@ -11,6 +11,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=True)
+    upvotes = serializers.SerializerMethodField()
+    downvotes = serializers.SerializerMethodField()
     class Meta:
         model = Product
         fields = ( 
@@ -28,8 +30,15 @@ class ProductSerializer(serializers.ModelSerializer):
             "image3",   
             "image4",   
             "image5",   
-            "thumbnail",            
+            "thumbnail",
+            "upvotes",
+            "downvotes",            
         )
+    def get_upvotes(self, obj):
+        return obj.vote_set.filter(value=2).count()
+
+    def get_downvotes(self, obj):
+        return obj.vote_set.filter(value=1).count()
 
 
 class Fetched_ProductSerializer(serializers.ModelSerializer):
@@ -62,8 +71,21 @@ class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
 
-
         fields = ["id","product","value","owner"]
+        extra_kwargs = {
+            'product':{'required':True},
+            'value':{'required':True}
+            }
+
+class OwnedProductSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    class Meta:
+        model = Vote
+
+        fields = ["id","product","owner"]
+        extra_kwargs = {
+            'product':{'required':True},
+            }
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
