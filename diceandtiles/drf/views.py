@@ -19,6 +19,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     
     queryset = Product.objects.all()
     serializer_class =  ProductSerializer
+    ordering = ['id']
     http_method_names = ['head','get']
     lookup_field = "slug"
     pagination_class=ProductPagination
