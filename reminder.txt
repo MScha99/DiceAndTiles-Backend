@@ -38,3 +38,5 @@ docker exec -i postgresql_db /bin/bash -c "PGPASSWORD=maciej psql --username mac
 
 
 https://gist.github.com/farhad0085/47c8baed77ba74b21d4dea7d9e7bf3e8
+
+--settings=diceandtiles.settingsdocker
