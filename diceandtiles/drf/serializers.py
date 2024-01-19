@@ -63,7 +63,13 @@ class CommentSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Comment
-        fields = ["id","product","body","created_on","owner"]
+        fields = ["id",
+                  "product",
+                  "body",
+                  "created_on",
+                  "owner",
+                  
+                  ]
 
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -79,10 +85,19 @@ class VoteSerializer(serializers.ModelSerializer):
 
 class OwnedProductSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    thumbnail_url = serializers.URLField(source='product.thumbnail_url', read_only=True)
+    slug = serializers.CharField(source='product.slug', read_only=True)
+    description = serializers.CharField(source='product.description', read_only=True)
     class Meta:
         model = Vote
 
-        fields = ["id","product","owner"]
+        fields = ["id",
+                  "product",
+                  "owner",
+                  "thumbnail_url",
+                  "slug",
+                  "description"
+                ]
         extra_kwargs = {
             'product':{'required':True},
             }
