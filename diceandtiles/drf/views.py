@@ -8,6 +8,7 @@ from .serializers import UserSerializer,ProductSerializer, CategorySerializer, O
 from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
 from django.db.models import Count, Sum, F
+from rest_framework.exceptions import PermissionDenied
 
 class ProductPagination(PageNumberPagination):
     page_size = 25  # Set the number of items per page
@@ -153,7 +154,8 @@ class OwnedProductViewSet(viewsets.ModelViewSet):
         if self.request.user.is_authenticated:
             return OwnedProduct.objects.filter(owner=self.request.user)
         else:
-             return OwnedProduct.objects.none()
+            #  return OwnedProduct.objects.none()
+             raise PermissionDenied(detail="You are not authenticated. Please send auth token in header to access user's game list.")
  #zwróć obiekty gdzie user w modelu zgadza sie z userem z requesta (wymaga tokenu)
     
    
