@@ -37,13 +37,16 @@ class ProductViewSet(viewsets.ModelViewSet):
         
         # Check if a custom sorting parameter is provided in the request
         sort_by = self.request.query_params.get('sort_by', None)
+        name = self.request.query_params.get('name')      
         
         if sort_by == 'id_desc':
             queryset = queryset.order_by('-id')
-        elif sort_by == 'upvotes':
+        if sort_by == 'upvotes':
             queryset = queryset.annotate(total_upvotes=Sum('vote__value', filter=F('vote__value') == 2))
             queryset = queryset.order_by('-total_upvotes')
-        
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        queryset = queryset.filter(is_active=True)
         return queryset
 
     def get_serializer_context(self):
