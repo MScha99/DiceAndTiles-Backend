@@ -26,6 +26,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    authentication_classes = [TokenAuthentication]
     ordering = ['id']
     http_method_names = ['head', 'get']
     lookup_field = "slug"
@@ -45,6 +46,15 @@ class ProductViewSet(viewsets.ModelViewSet):
         
         return queryset
 
+    def get_serializer_context(self):
+        """
+        Additional context provided to the serializer.
+        """
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+   
     @action(detail=False, methods=['get'])
     def sorted_by_id_desc(self, request):
         queryset = self.filter_queryset(self.get_queryset().order_by('-id'))
