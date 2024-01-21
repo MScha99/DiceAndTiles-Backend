@@ -14,8 +14,8 @@ class Command(BaseCommand):
         for product in products:
             try:
                 for x in range(1, 6):
-                    image_path = f'path/to/your/local/images/{product.pk}_image{x}.webp'
-                    thumbnail_path = f'path/to/your/local/images/{product.pk}_thumbnail.webp'
+                    image_path = f'./media/images/{product.pk}_image{x}.webp'
+                    thumbnail_path = f'./media/images/{product.pk}_thumbnail.webp'
 
                     # Assign images to the appropriate fields
                     if x == 1:
