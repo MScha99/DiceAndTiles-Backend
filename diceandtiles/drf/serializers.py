@@ -1,16 +1,13 @@
 from rest_framework import serializers
-from .models import Product, Category, Comment, Vote, Profile, Fetched_Product
+from .models import Product, Comment, Vote, Profile, Fetched_Product
 from django.contrib.auth.models import User
 from rest_framework.authtoken.views import Token
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ["name"]
+
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(many=True)
+
     upvotes = serializers.SerializerMethodField()
     downvotes = serializers.SerializerMethodField()
     user_vote = serializers.SerializerMethodField()
@@ -23,7 +20,51 @@ class ProductSerializer(serializers.ModelSerializer):
             "slug",            
             "description",            
             "is_active",  
-            "category",
+  
+            "min_players",        
+            "max_players",    
+            "image1",   
+            "image2",   
+            "image3",   
+            "image4",   
+            "image5",   
+            "thumbnail",
+            "upvotes",
+            "downvotes",
+            "user_vote"            
+        )
+    def get_upvotes(self, obj):
+        return obj.vote_set.filter(value=2).count()
+
+    def get_downvotes(self, obj):
+        return obj.vote_set.filter(value=1).count()
+
+    def get_user_vote(self, obj):
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            try:
+                user_vote = obj.vote_set.get(owner=request.user).value
+            except Vote.DoesNotExist:
+                user_vote = None
+            return user_vote
+        return None  # For unauthorized users, set user_vote to None
+
+
+class ProductwebSerializer(serializers.ModelSerializer):
+
+    upvotes = serializers.SerializerMethodField()
+    downvotes = serializers.SerializerMethodField()
+    user_vote = serializers.SerializerMethodField()
+    class Meta:
+        model = Product
+        fields = ( 
+            "id",
+            "bggid",
+            "name",
+            "slug",            
+            "description",            
+            "is_active",  
+  
             "min_players",        
             "max_players",    
             "image1",   
@@ -55,7 +96,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class Fetched_ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(many=True)
+
     class Meta:
         model = Fetched_Product
         fields = ( 
@@ -64,7 +105,7 @@ class Fetched_ProductSerializer(serializers.ModelSerializer):
             "name",
             "slug", 
             "description",  
-            "category", 
+
             'min_players',
             'max_players',    
             "image_url",

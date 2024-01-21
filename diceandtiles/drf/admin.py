@@ -28,6 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
             for user in users_without_vote:
                 value = random.choice([1, 2])
                 Vote.objects.create(product=product, owner=user, value=value)
+                print(f'user {user.id} voted on {product.slug}')
 
 
               
@@ -82,6 +83,12 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['id','user']
+    actions = ['custom_action']
+
+    def custom_action(self, request, queryset):
+        # Call your custom command using call_command
+        call_command('create_users')
+    custom_action.short_description = 'create users 1-200'
     
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
