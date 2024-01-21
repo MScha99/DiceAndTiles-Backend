@@ -27,6 +27,8 @@ docker exec -it django_web /bin/bash
 python manage.py makemigrations
 python manage.py migrate
 
+--settings=diceandtiles.settingsdocker
+
 maciej@root.com
 172.22.0.3
 maciej

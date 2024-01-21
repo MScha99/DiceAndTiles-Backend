@@ -40,7 +40,9 @@ schema_view = get_schema_view(
 
 router = DefaultRouter()
 router.register(
-    r'products', views.ProductViewSet, basename="all products")
+    r'products', views.ProductViewSet, basename="all products with jpg images")
+router.register(
+    r'productsweb', views.ProductwebViewSet, basename="all products with webp images")
 router.register(
     r'fetchedproducts', views.Fetched_ProductViewSet, basename="fetched products")
 router.register(
