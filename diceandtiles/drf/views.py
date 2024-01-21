@@ -7,28 +7,74 @@ from .models import Product, Category, Comment, Vote, Profile, Fetched_Product, 
 from .serializers import UserSerializer,ProductSerializer, CategorySerializer, OwnedProductSerializer, CommentSerializer, VoteSerializer, Fetched_ProductSerializer
 from django.contrib.auth.models import User
 from rest_framework.authentication import TokenAuthentication
+from django.db.models import Count, Sum, F
+from rest_framework.exceptions import PermissionDenied
 
 class ProductPagination(PageNumberPagination):
     page_size = 25  # Set the number of items per page
     page_size_query_param = 'page_size'
     max_page_size = 2000
 
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 class ProductViewSet(viewsets.ModelViewSet):
     """
-    lista produktów
+    Lista produktów
     """
     
     queryset = Product.objects.all()
-    serializer_class =  ProductSerializer
+    serializer_class = ProductSerializer
+    authentication_classes = [TokenAuthentication]
     ordering = ['id']
-    http_method_names = ['head','get']
+    http_method_names = ['head', 'get']
     lookup_field = "slug"
-    pagination_class=ProductPagination
+    pagination_class = ProductPagination
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Check if a custom sorting parameter is provided in the request
+        sort_by = self.request.query_params.get('sort_by', None)
+        name = self.request.query_params.get('name')      
+        
+        if sort_by == 'id_desc':
+            queryset = queryset.order_by('-id')
+        if sort_by == 'upvotes':
+            queryset = queryset.annotate(total_upvotes=Sum('vote__value', filter=F('vote__value') == 2))
+            queryset = queryset.order_by('-total_upvotes')
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        queryset = queryset.filter(is_active=True)
+        return queryset
+
+    def get_serializer_context(self):
+        """
+        Additional context provided to the serializer.
+        """
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+   
+    @action(detail=False, methods=['get'])
+    def sorted_by_id_desc(self, request):
+        queryset = self.filter_queryset(self.get_queryset().order_by('-id'))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def sorted_by_upvotes(self, request):
+        queryset = self.filter_queryset(self.get_queryset().order_by('-upvotes'))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 
 class Fetched_ProductViewSet(viewsets.ModelViewSet):
     """
-    lista produktów z mikroserwisu fetched przed mergem do main tabeli
+    produkty fetchowane z mikroserwisu fastapi scrapper
     """
     
     queryset = Fetched_Product.objects.all()
@@ -46,7 +92,7 @@ class RegisterViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
-    lista produktów z mikroserwisu fetched przed mergem do main tabeli
+    komentarze pod produktami
     """
     http_method_names = ['head', 'get', 'post']
 
@@ -73,7 +119,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class VoteViewSet(viewsets.ModelViewSet):
     """
-    lista produktów z mikroserwisu fetched przed mergem do main tabeli
+    oddawanie glosu na gry
     """
     http_method_names = ['post']
 
@@ -121,7 +167,8 @@ class OwnedProductViewSet(viewsets.ModelViewSet):
         if self.request.user.is_authenticated:
             return OwnedProduct.objects.filter(owner=self.request.user)
         else:
-             return OwnedProduct.objects.none()
+            #  return OwnedProduct.objects.none()
+             raise PermissionDenied(detail="You are not authenticated. Please send auth token in header to access user's game list.")
  #zwróć obiekty gdzie user w modelu zgadza sie z userem z requesta (wymaga tokenu)
     
    
