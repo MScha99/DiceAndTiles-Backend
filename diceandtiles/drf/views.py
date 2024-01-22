@@ -198,7 +198,7 @@ class OwnedProductViewSet(viewsets.ModelViewSet):
     """
     lista posiadanych gier uzytkownika
     """
-    http_method_names = ['get','post']
+    http_method_names = ['get','post', 'delete', 'patch', "put"]
 
     serializer_class = OwnedProductSerializer
     authentication_classes = (TokenAuthentication,)
