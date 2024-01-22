@@ -68,13 +68,26 @@ class ProductAdmin(admin.ModelAdmin):
 class Fetched_ProductAdmin(admin.ModelAdmin):
     list_display = ['name','id','slug']
     ordering = ['id']
-    actions = ['custom_action']
+    actions = ['custom_action','fetch','insert']
 
     def custom_action(self, request, queryset):
         # Call your custom command using call_command
         call_command('populatecommand')
 
     custom_action.short_description = 'Populate PRODUCTS table command'
+
+    def fetch(self, request, queryset):
+        # Call your custom command using call_command
+        call_command('scrapperfetch')
+
+    fetch.short_description = 'fetch data from bgg to scrapper'
+
+    def insert(self, request, queryset):
+        # Call your custom command using call_command
+        call_command('scrapperinsert')
+
+    insert.short_description = 'populate db with products fetched via scrapper'
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
