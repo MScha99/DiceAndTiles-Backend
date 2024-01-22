@@ -203,6 +203,7 @@ class OwnedProductViewSet(viewsets.ModelViewSet):
     serializer_class = OwnedProductSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    lookup_field = 'product'
     
     def perform_create(self, serializer):
         try:
@@ -213,7 +214,7 @@ class OwnedProductViewSet(viewsets.ModelViewSet):
         if OwnedProduct.objects.filter(product=product, owner=self.request.user).first():
             return Response({"message": " product is already on your list"})
         else:
-            # Create a new vote
+           
             OwnedProduct.objects.create(product=product, owner=self.request.user )
     def get_queryset(self): 
         if self.request.user.is_authenticated:
