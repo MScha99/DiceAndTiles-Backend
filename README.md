@@ -13,7 +13,6 @@ This is a back-end web app for a board game catalog and collection management sy
 - **Data Fetching**: Integration with external board game databases.
 
 ## Endpoints
-Full API documentation available at: https://boardgamecollection.docs.apiary.io/
 
 ### **Product Service**
 - `GET /products` - Retrieve all products.
